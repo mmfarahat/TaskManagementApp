@@ -10,7 +10,7 @@ namespace TaskManagementApp.Application
 {
     public static class ApplicationServiceRegistration
     {
-        public static void AddApplicationServices(this IServiceCollection services)
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddMediatR(config => config.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
@@ -19,3 +19,4 @@ namespace TaskManagementApp.Application
         }
 
     }
+}
