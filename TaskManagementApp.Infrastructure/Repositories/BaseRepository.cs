@@ -10,7 +10,7 @@ namespace TaskManagementApp.Infrastructure.Repositories
 {
     public class BaseRepository<T> : IAsyncRepository<T> where T : class
     {
-        TaskManagementDBContext _dbContext;
+       protected TaskManagementDBContext _dbContext;
 
         public BaseRepository(TaskManagementDBContext dbContext)
         {
@@ -39,10 +39,11 @@ namespace TaskManagementApp.Infrastructure.Repositories
             return await _dbContext.Set<T>().ToListAsync();
         }
 
-        public async Task UpdateAsync(T entity)
+        public async Task<T> UpdateAsync(T entity)
         {
             _dbContext.Entry(entity).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
+            return entity;
 
         }
     }

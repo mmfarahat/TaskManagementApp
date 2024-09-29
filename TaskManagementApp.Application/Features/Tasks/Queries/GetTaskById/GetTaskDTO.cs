@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using TaskManagementApp.Domain.Common;
 using TaskStatus = TaskManagementApp.Domain.Common.TaskStatus;
 
-namespace TaskManagementApp.Application.Features.Tasks.Commands.CreateTask
+namespace TaskManagementApp.Application.Features.Tasks.Queries.GetTaskById
 {
-    public class CreateTaskDTO
+    public class GetTaskDTO
     {
         public long Id { get; set; }
         public string Title { get; set; }
@@ -17,5 +17,6 @@ namespace TaskManagementApp.Application.Features.Tasks.Commands.CreateTask
         public TaskPriority Priority { get; set; }
         public TaskStatus Status { get; set; }
         public string AssignedTo { get; set; }
+        public string AssignedToName { get; set; }
     }
 }

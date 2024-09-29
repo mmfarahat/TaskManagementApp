@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -13,10 +14,11 @@ namespace TaskManagementApp.Infrastructure
 {
     public static class InfrastructureServicesRegistration
     {
-        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
             services.AddDbContext<TaskManagementDBContext>(options =>
-                options.UseInMemoryDatabase("TaskManagementAppDB"));
+                options.UseInMemoryDatabase("TaskManagementAppDB").UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+                 .ConfigureWarnings(b => b.Ignore(InMemoryEventId.TransactionIgnoredWarning)));
             services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
             services.AddScoped<ITaskRepository, TaskRepository>();
 

@@ -6,10 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaskManagementApp.Application.Contracts.DataAccess;
+using TaskManagementApp.Application.Features.Tasks.Queries.GetTaskById;
 
 namespace TaskManagementApp.Application.Features.Tasks.Queries.GetTasksList
 {
-    public class GetTaskListQueryHandler : IRequestHandler<GetTaskListQuery, List<TaskListDTO>>
+    public class GetTaskListQueryHandler : IRequestHandler<GetTaskListQuery, GetTaskListQueryResponse>
     {
         IMapper _mapper;
         ITaskRepository _taskRepository;
@@ -20,10 +21,10 @@ namespace TaskManagementApp.Application.Features.Tasks.Queries.GetTasksList
             _taskRepository = taskRepository;
 
         }
-        public async Task<List<TaskListDTO>> Handle(GetTaskListQuery request, CancellationToken cancellationToken)
+        public async Task<GetTaskListQueryResponse> Handle(GetTaskListQuery request, CancellationToken cancellationToken)
         {
-            var allTasks = await _taskRepository.ListAllAsync();
-            return _mapper.Map<List<TaskListDTO>>(allTasks);
+            return await _taskRepository.SearchTasks(request);
+
         }
 
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManagementApp.Application.Contracts;
 using TaskManagementApp.Application.Contracts.DataAccess;
 using TaskManagementApp.Application.Exceptions;
 using TaskManagementApp.Domain.Entities;
@@ -16,16 +17,18 @@ namespace TaskManagementApp.Application.Features.Tasks.Commands.CreateTask
     {
         IMapper _mapper;
         ITaskRepository _taskRepository;
-        public CreateTaskCommandHandler(IMapper mapper, ITaskRepository taskRepository)
+        IUserService _userService;
+        public CreateTaskCommandHandler(IMapper mapper, ITaskRepository taskRepository, IUserService userService)
         {
             _mapper = mapper;
             _taskRepository = taskRepository;
+            _userService = userService;
         }
         public async Task<CreateTaskCommandResponse> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
         {
             var response = new CreateTaskCommandResponse();
             var task = _mapper.Map<AppTask>(request);
-            var validationResult = await new CreateTaskCommandValidator().ValidateAsync(request);
+            var validationResult = await new CreateTaskCommandValidator(_userService).ValidateAsync(request);
             if (validationResult.Errors.Count > 0)
             {
                 response.Success = false;

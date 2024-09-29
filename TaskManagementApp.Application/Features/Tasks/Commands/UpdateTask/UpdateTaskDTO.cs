@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using TaskManagementApp.Domain.Common;
 using TaskStatus = TaskManagementApp.Domain.Common.TaskStatus;
 
-namespace TaskManagementApp.Application.Features.Tasks.Commands.CreateTask
+namespace TaskManagementApp.Application.Features.Tasks.Commands.UpdateTask
 {
-    public class CreateTaskDTO
+    public class UpdateTaskDTO
     {
         public long Id { get; set; }
         public string Title { get; set; }

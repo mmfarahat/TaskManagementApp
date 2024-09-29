@@ -5,15 +5,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaskManagementApp.Application.Contracts;
+using TaskManagementApp.Application.Contracts.DataAccess;
+using TaskManagementApp.Application.Features.Tasks.Commands.CreateTask;
 
-namespace TaskManagementApp.Application.Features.Tasks.Commands.CreateTask
+namespace TaskManagementApp.Application.Features.Tasks.Commands.UpdateTask
 {
-    public class CreateTaskCommandValidator : AbstractValidator<CreateTaskCommand>
+    public class UpdateTaskCommandValidator : AbstractValidator<UpdateTaskCommand>
     {
-        
-        public CreateTaskCommandValidator(IUserService userService)
+        public UpdateTaskCommandValidator(IUserService userService, ITaskRepository taskRepository)
         {
-          
+            RuleFor(p => p.Id)
+                 .NotEmpty().WithMessage("{PropertyName} is required.")
+                 .NotNull().CustomAsync(async (id, context, cancellationToken) =>
+                 {
+                     var task = await taskRepository.GetByIdAsync(id);
+                     if (task == null)
+                     {
+                         context.AddFailure("Id", "Task not found");
+                     }
+                 });
             RuleFor(p => p.Title)
                 .NotEmpty().WithMessage("{PropertyName} is required.")
                 .NotNull()
@@ -40,7 +50,6 @@ namespace TaskManagementApp.Application.Features.Tasks.Commands.CreateTask
                         context.AddFailure("AssignedToId", "invalid user id");
                     }
                 });
-
         }
     }
 }
