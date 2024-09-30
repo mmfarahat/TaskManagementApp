@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManagementApp.Application.Contracts;
 using TaskManagementApp.Application.Contracts.DataAccess;
 using TaskManagementApp.Application.Features.Tasks.Queries.GetTaskById;
 using TaskManagementApp.Application.Features.Tasks.Queries.GetTasksList;
@@ -16,9 +17,11 @@ namespace TaskManagementApp.Infrastructure.Repositories
     public class TaskRepository : BaseRepository<AppTask>, ITaskRepository
     {
         IMapper _mapper;
-        public TaskRepository(TaskManagementDBContext dbContext, IMapper mapper) : base(dbContext)
+        IUserService _userService;
+        public TaskRepository(TaskManagementDBContext dbContext, IMapper mapper, IUserService userService) : base(dbContext)
         {
             _mapper = mapper;
+            _userService = userService;
         }
         public async Task<GetTaskListQueryResponse> SearchTasks(GetTaskListQuery request)
         {
@@ -35,8 +38,12 @@ namespace TaskManagementApp.Infrastructure.Repositories
             {
                 query = query.Where(t => t.AssignedTo == request.Assignee);
             }
+            if (request.GetMyTasksOnly)
+            {
+                query = query.Where(t => t.AssignedTo == _userService.LoggedInUserId);
+            }
             var totalCount = query.Count();
-            var totalPages = (int)Math.Ceiling((double)totalCount / request.PageSize);
+            //var totalPages = (int)Math.Ceiling((double)totalCount / request.PageSize);
 
             query = query.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize);
              var tasks = await query.ToListAsync();
@@ -44,7 +51,7 @@ namespace TaskManagementApp.Infrastructure.Repositories
             return new GetTaskListQueryResponse
             {
                 Tasks = _mapper.Map<List<GetTaskDTO>>(tasks),
-                PageCount = totalPages
+                totalCount = totalCount
             };
         }
     }

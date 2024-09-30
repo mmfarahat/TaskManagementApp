@@ -16,6 +16,10 @@ namespace TaskManagementApp.Application.Features.Tasks.Queries.GetTaskById
         public DateTime DueDate { get; set; }
         public TaskPriority Priority { get; set; }
         public TaskStatus Status { get; set; }
+
+        public string PriorityString { get; set; }
+        public string StatusString   { get; set; }
+
         public string AssignedTo { get; set; }
         public string AssignedToName { get; set; }
     }

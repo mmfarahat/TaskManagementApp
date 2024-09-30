@@ -22,7 +22,7 @@ namespace TaskManagementApp.Application.Features.Accounts.Login
             _mapper = mapper;
             _userService = userService;
         }
-       
+
 
         public async Task<LoginCommandResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
@@ -30,17 +30,12 @@ namespace TaskManagementApp.Application.Features.Accounts.Login
             var validationResult = await new LoginCommandValidator().ValidateAsync(request);
             if (validationResult.Errors.Count > 0)
             {
-                response.Success = false;
-                response.ValidationErrors = new List<string>();
-                foreach (var error in validationResult.Errors)
-                {
-                    response.ValidationErrors.Add(error.ErrorMessage);
-                }
+                throw new ValidationException(validationResult);
             }
             else
             {
-               var tokenResponse = await _userService.LogUserIn(request.Email, request.Password);
-                if(tokenResponse != null)
+                var tokenResponse = await _userService.LogUserIn(request.Email, request.Password);
+                if (tokenResponse != null)
                 {
                     response.Success = true;
                     response.TokenResponse.Token = tokenResponse.Token;

@@ -15,17 +15,25 @@ namespace TaskManagementApp.Application.Mappings
 {
     public class MappingProfile : Profile
     {
-       
+
         public MappingProfile()
         {
-           
+
             CreateMap<Domain.Entities.AppTask, CreateTaskDTO>().ReverseMap();
             CreateMap<Domain.Entities.AppTask, UpdateTaskDTO>().ReverseMap();
             CreateMap<Domain.Entities.AppTask, CreateTaskCommand>().ReverseMap();
             CreateMap<Domain.Entities.AppTask, UpdateTaskCommand>().ReverseMap();
-            CreateMap<Domain.Entities.AppTask, GetTaskDTO>().AfterMap<GetUserName>().ReverseMap();
+            CreateMap<Domain.Entities.AppTask, GetTaskDTO>().ForMember(
+                                    dest => dest.StatusString,
+                                    opt => opt.MapFrom(src => src.Status)
+                                    )
+                                    .ForMember(
+                                    dest => dest.PriorityString,
+                                    opt => opt.MapFrom(src => src.Priority)
+                                    )
+                .AfterMap<GetUserName>().ReverseMap();
             CreateMap<Domain.Entities.AppTask, GetTaskByIdQuery>().ReverseMap();
-           // CreateMap<Domain.Entities.AppTask, TaskListDTO>().AfterMap<GetUserName>().ReverseMap();
+            // CreateMap<Domain.Entities.AppTask, TaskListDTO>().AfterMap<GetUserName>().ReverseMap();
         }
     }
 
@@ -40,7 +48,7 @@ namespace TaskManagementApp.Application.Mappings
 
         public void Process(AppTask source, GetTaskDTO destination, ResolutionContext context)
         {
-            destination.AssignedToName =  _userService.GetUserName(source.AssignedTo).Result;
+            destination.AssignedToName = _userService.GetUserName(source.AssignedTo).Result;
         }
     }
 }

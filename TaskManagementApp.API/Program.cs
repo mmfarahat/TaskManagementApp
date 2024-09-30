@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Hosting;
+using TaskManagementApp.API.Middlewares;
 using TaskManagementApp.API.Services;
 using TaskManagementApp.Application;
 using TaskManagementApp.Application.Contracts;
@@ -24,6 +25,15 @@ namespace TaskManagementApp.API
             builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddControllers();
+
+
+            //allow any origin
+            builder.Services.AddCors(options => options.AddDefaultPolicy(
+                builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+            ));
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -54,8 +64,10 @@ namespace TaskManagementApp.API
 
             app.UseHttpsRedirection();
 
+            app.UseCors();
             app.UseAuthorization();
 
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
             app.MapControllers();
 
             app.Run();

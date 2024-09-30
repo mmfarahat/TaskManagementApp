@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TaskManagementApp.Application.Contracts;
 using TaskManagementApp.Application.Contracts.DataAccess;
+using TaskManagementApp.Application.Exceptions;
 using TaskManagementApp.Application.Features.Tasks.Commands.UpdateTask;
 using TaskManagementApp.Domain.Entities;
 using AppTask = TaskManagementApp.Domain.Entities.AppTask;
@@ -32,12 +33,7 @@ namespace TaskManagementApp.Application.Features.Tasks.Commands.CreateTask
             var validationResult = await new UpdateTaskCommandValidator(_userService,_taskRepository).ValidateAsync(request);
             if (validationResult.Errors.Count > 0)
             {
-                response.Success = false;
-                response.ValidationErrors = new List<string>();
-                foreach (var error in validationResult.Errors)
-                {
-                    response.ValidationErrors.Add(error.ErrorMessage);
-                }
+              throw new ValidationException(validationResult);
             }
             else if (response.Success)
             {

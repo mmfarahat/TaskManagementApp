@@ -9,7 +9,7 @@ namespace TaskManagementApp.Application.Features.Tasks.Queries.GetTasksList
 {
     public class GetTaskListQueryResponse : BaseResponse
     {
-        public int PageCount { get; set; }
+        public int totalCount { get; set; }
         public List<GetTaskDTO> Tasks { get; set; } = new List<GetTaskDTO>();
     }
 }
