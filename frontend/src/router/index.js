@@ -5,6 +5,7 @@ import allTasks from '@/components/AllTasks.vue';
 import login from '@/components/Login.vue';
 import createTask from '@/components/CreateTask.vue';
 import updateTask from '@/components/EditTask.vue';
+import chat from '@/components/Chat.vue';
 import authenticationService from '@/Services/authenticationService';
 
 const routes = [
@@ -37,6 +38,11 @@ const routes = [
     path: '/updateTask/:id',
     name: 'updateTask',
     component: updateTask,
+  },
+  {
+    path: '/chat',
+    name: 'chat',
+    component: chat,
   }
 
 ];

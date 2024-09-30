@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Hosting;
+using TaskManagementApp.API.Chat;
 using TaskManagementApp.API.Middlewares;
 using TaskManagementApp.API.Services;
 using TaskManagementApp.Application;
@@ -23,17 +24,20 @@ namespace TaskManagementApp.API
             builder.Services.AddScoped<IUserService, UserService>();
 
             builder.Services.AddHttpContextAccessor();
-
             builder.Services.AddControllers();
 
-
             //allow any origin
-            builder.Services.AddCors(options => options.AddDefaultPolicy(
-                builder => builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-            ));
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder => builder.WithOrigins("http://localhost:5173") // Update with your client URL
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod()
+                                       .AllowCredentials());
+            });
 
+
+            builder.Services.AddSignalR();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -63,13 +67,13 @@ namespace TaskManagementApp.API
             }
 
             app.UseHttpsRedirection();
-
-            app.UseCors();
+            app.UseAuthentication();  
             app.UseAuthorization();
-
+            app.UseCors("AllowSpecificOrigin"); // Apply the CORS policy
+ 
             app.UseMiddleware<ExceptionHandlerMiddleware>();
             app.MapControllers();
-
+            app.MapHub<ChatHub>("/chatHub");
             app.Run();
         }
     }

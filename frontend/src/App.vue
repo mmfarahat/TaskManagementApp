@@ -9,7 +9,7 @@ export default {
   methods: {
     async logout() {
       authenticationService.logout()
-      this.$router.push('/#/login')
+      this.$router.push('/login')
     }
   },
   // computed: {
@@ -53,6 +53,9 @@ export default {
           </li>
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/#/createTask">Create Task (+)</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/#/chat">Chat</a>
           </li>
           <li class="nav-item" v-if="isAuthenticated">
             <a class="nav-link active" aria-current="page" href="javascript:void(0)" @click="logout()">logout</a>

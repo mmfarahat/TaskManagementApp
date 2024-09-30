@@ -2,6 +2,7 @@ import axios from 'axios';
 import { ref } from 'vue';
 import VueJwtDecode from 'vue-jwt-decode';
 import constants from '@/helpers/constants';
+import axiosService from './axiosService';
 
 
 let baseUrl = 'https://localhost:7120/';
@@ -18,7 +19,8 @@ const authenticationService = {
       localStorage.setItem('user', JSON.stringify(response.data.tokenResponse));
     }
   },
-  logout: function () {
+  logout: async function () {
+    await axiosService.axiosGet('Account/RemoveConnectionId');
     localStorage.removeItem('user');
   },
   isUserLoggedIn: function () {
@@ -34,12 +36,17 @@ const authenticationService = {
     return this.isAuthenticated.value;
   },
   getUserToken: function () {
+    if (!this.isUserLoggedIn()) return '';
     return JSON.parse(localStorage.getItem('user')).token;
   },
   getLoggedInUserName: function () {
+    if (!this.isUserLoggedIn()) return '';
     let decoded = VueJwtDecode.decode(this.getUserToken());
     this.loggedInUserName.value = decoded[constants.Claims_Name];
     return this.loggedInUserName.value
+  },
+  updateConnectionId: async function (connectionId) {
+    await axiosService.axiosGet('Account/UpdateConnectionId/' + connectionId);
   },
 };
 export default authenticationService;
