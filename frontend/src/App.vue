@@ -22,9 +22,7 @@ export default {
   async mounted() {
     const route = useRoute()
     const router = useRouter()
-
     await router.isReady()
-
     authenticationService.getLoggedInUserName()
   },
   setup() {
@@ -46,13 +44,14 @@ export default {
             <a class="nav-link active" aria-current="page" href="/#/">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/#/myTasks">My Tasks</a>
+            <a class="nav-link active" aria-current="page" href="/#/createTask">Create Task (+)</a>
           </li>
+
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/#/allTasks">all Tasks</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/#/createTask">Create Task (+)</a>
+            <a class="nav-link active" aria-current="page" href="/#/myTasks">My Tasks</a>
           </li>
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/#/chat">Chat</a>

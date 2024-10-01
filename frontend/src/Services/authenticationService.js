@@ -17,11 +17,13 @@ const authenticationService = {
     let response = await axios.post(baseUrl + 'Account/login', loginRequest);
     if (response.status === 200 && response.data.success) {
       localStorage.setItem('user', JSON.stringify(response.data.tokenResponse));
+      this.getLoggedInUserName();
     }
   },
   logout: async function () {
     await axiosService.axiosGet('Account/RemoveConnectionId');
     localStorage.removeItem('user');
+    this.isAuthenticated.value = false;
   },
   isUserLoggedIn: function () {
     try {

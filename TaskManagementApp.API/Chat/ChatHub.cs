@@ -35,8 +35,12 @@ namespace TaskManagementApp.API.Chat
         }
         public async Task SendMessage(string user, string message)
         {
-            await Clients.Client(user).SendAsync("ReceiveMessage", user, message);
+            await Clients.Client(user).SendAsync("ReceiveMessage", Context.ConnectionId, message);
             //await Clients.All.SendAsync("ReceiveMessage", user, message);
+        }
+        public Task<string> GetConnectionId()
+        {
+            return Task.FromResult(Context.ConnectionId);
         }
     }
 

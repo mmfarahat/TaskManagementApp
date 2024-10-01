@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using TaskManagementApp.API.Chat;
 using TaskManagementApp.API.Middlewares;
 using TaskManagementApp.API.Services;
@@ -37,13 +38,17 @@ namespace TaskManagementApp.API
             });
 
 
-            builder.Services.AddSignalR();
+            builder.Services.AddSignalR(options =>
+                        {
+                            options.KeepAliveInterval = TimeSpan.FromSeconds(10); // Adjust as needed
+                            options.ClientTimeoutInterval = TimeSpan.FromSeconds(30); // Adjust as needed
+                        });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
-
+            app.Urls.Add("https://localhost:7120");
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
@@ -67,10 +72,10 @@ namespace TaskManagementApp.API
             }
 
             app.UseHttpsRedirection();
-            app.UseAuthentication();  
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseCors("AllowSpecificOrigin"); // Apply the CORS policy
- 
+
             app.UseMiddleware<ExceptionHandlerMiddleware>();
             app.MapControllers();
             app.MapHub<ChatHub>("/chatHub");

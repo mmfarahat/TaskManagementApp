@@ -15,6 +15,7 @@
 
 <script>
 import authenticationService from '@/Services/authenticationService'
+import chatService from '@/Services/chatService'
 
 export default {
   name: 'login_component',
@@ -26,6 +27,7 @@ export default {
       const password = document.getElementById('exampleInputPassword1').value
 
       await authenticationService.login(email, password)
+      chatService.connectToChatHub()
       this.$router.push('/#/')
     }
   }

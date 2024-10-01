@@ -25,6 +25,7 @@ import * as signalR from '@microsoft/signalr'
 import constants from '@/helpers/constants'
 import authenticationService from '@/Services/authenticationService'
 import usersService from '@/Services/usersService'
+import chatService from '@/Services/chatService'
 
 import { ref } from 'vue'
 export default {
@@ -49,29 +50,32 @@ export default {
     return {
       user: '',
       message: '',
-      messages: [],
-      connection: null
+      messages: []
     }
   },
   created() {
-    this.connection = new signalR.HubConnectionBuilder().withUrl(constants.Server_Base_url + '/chathub').build()
+    //  this.connection = new signalR.HubConnectionBuilder().withUrl(constants.Server_Base_url + '/chathub').build()
+    if (window.connection == undefined || window.connection == null) {
+      chatService.connectToChatHub()
 
-    this.connection.on('ReceiveMessage', (user, message) => {
-      alert('message received')
-      this.messages.push({ user, message })
-    })
-    var self = this
-    this.connection
-      .start()
-      .then(async () => {
-        let connectionid = self.connection.connectionId
-        await authenticationService.updateConnectionId(connectionid)
+      window.connection.on('ReceiveMessage', (senderId, message) => {
+        //    alert('message received')
+        alert(message)
+        //  this.recevierId = senderId
+        this.messages.push({ message })
       })
-      .catch((err) => console.error(err.toString()))
+    } else {
+      window.connection.on('ReceiveMessage', (senderId, message) => {
+        // alert('message received')
+        alert(message)
+        //  this.recevierId = senderId
+        //  this.messages.push({ message })
+      })
+    }
   },
   methods: {
     sendMessage() {
-      this.connection.invoke('SendMessage', this.recevierId, this.message).catch((err) => console.error(err.toString()))
+      window.connection.invoke('SendMessage', this.recevierId, this.message).catch((err) => console.error(err.toString()))
       this.message = ''
     },
     startChat() {
