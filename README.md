@@ -21,7 +21,7 @@ This a simple app to manage tasks, the app is created with asp.net web apis in t
 ### How to use
 * run the backend project (API) from visual studio
 * open the vue app located in **frontend** folder in the vs code and run the following command `npm run dev`
-* make sure that the backend in running on port 7120 and the frontend  on port 5173 to avoid CORS problems
+* make sure that the **backend** in running on port **7120** and the **frontend**  on port **5173** to avoid CORS problems
 * login with any of the 4 users mentioned above
 * Create Tasks, view all tasks, make search and paging and edit tasks
 
