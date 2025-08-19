@@ -7,7 +7,9 @@ trigger:
 - master
 
 pool:
-  vmImage: 'windows-latest'
+ name: default #agent pool
+ demands:
+ - agent.name -equals MAHMOUD-DESKTOP #self-hosted agent
 
 variables:
   solution: '**/*.sln'
