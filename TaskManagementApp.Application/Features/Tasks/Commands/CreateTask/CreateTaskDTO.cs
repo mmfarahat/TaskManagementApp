@@ -17,5 +17,6 @@ namespace TaskManagementApp.Application.Features.Tasks.Commands.CreateTask
         public TaskPriority Priority { get; set; }
         public TaskStatus Status { get; set; }
         public string AssignedTo { get; set; }
+        public int temp { get; set; }
     }
 }
